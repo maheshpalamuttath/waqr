@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>WhatsApp Connect</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="#" type="image/png">
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/argon.css" type="text/css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/custom.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css">
+  <link rel="stylesheet" type="text/css" href="https://tinyurl.com/2rwemhe6/assets/plugins/pace/pace-theme-default.min.css">
+  <link rel="stylesheet" type="text/css" href="https://tinyurl.com/2rwemhe6/assets/css/qr-page.css">
+
+  <!-- Custom Styles for Spinner -->
+  <style>
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: #3b5998;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: auto;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .qr-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 250px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Main content -->
+
+  <!-- Header -->
+  <div class="header pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links">
+                <li class="breadcrumb-item"><a href="https://tinyurl.com/2rwemhe6/login"></a></li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row justify-content-center">
+      <div class="col-sm-8">
+        <div class="card card-neutral">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>Scan the QR Code On Your WhatsApp Mobile App</h4>
+            <div class="card-header-action loggout_area">
+              <a href="javascript:void(0)" class="btn btn-sm btn-neutral logout-btn" data-id="d5bafff9-7e99-482c-803f-9b0d17b381ec">
+                <i class="fas fa-sign-out-alt"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-center qr-area">
+              <!-- Spinner Placeholder -->
+              <div id="spinner" class="spinner"></div>
+              
+              <!-- QR Code Image -->
+              <img id="qrImage" src="https://whats-api.opensio.co.in/api/ws620250818/auth/qr?format=image" alt="QR Code Image" class="img-fluid"
+                   style="display: none;" 
+                   onload="document.getElementById('spinner').style.display='none'; this.style.display='block';"
+                   onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0K...';">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>How To Scan?</h4>
+            <div class="card-header-action">
+              <a href="#" class="btn btn-sm btn-neutral">
+                <i class="fas fa-lightbulb"></i>&nbspGuide
+              </a>
+            </div>
+          </div>
+          <div class="card-body">
+            <img src="https://tinyurl.com/2rwemhe6/uploads/scan-demo.gif" class="w-100" alt="Scan Demo">
+          </div>
+          <div class="card-footer">
+            <div class="activities">
+              <div class="activity">
+                <div class="activity-icon bg-primary text-white shadow-primary">
+                  <i class="ni ni-mobile-button"></i>
+                </div>
+                <div class="activity-detail">
+                  <div class="mb-2">
+                    <span class="text-job text-primary">Step 1</span>
+                    <span class="bullet"></span>
+                  </div>
+                  <p>Open WhatsApp on your phone</p>
+                </div>
+              </div>
+              <div class="activity">
+                <div class="activity-icon bg-primary text-white shadow-primary">
+                  <i class="ni ni-active-40"></i>
+                </div>
+                <div class="activity-detail">
+                  <div class="mb-2">
+                    <span class="text-job text-primary">Step 2</span>
+                    <span class="bullet"></span>
+                  </div>
+                  <p>Tap Menu or Settings and select Linked Devices</p>
+                </div>
+              </div>
+              <div class="activity">
+                <div class="activity-icon bg-primary text-white shadow-primary">
+                  <i class="ni ni-active-40"></i>
+                </div>
+                <div class="activity-detail">
+                  <div class="mb-2">
+                    <span class="text-job text-primary">Step 3</span>
+                    <span class="bullet"></span>
+                  </div>
+                  <p>Tap on Link a Device</p>
+                </div>
+              </div>
+              <div class="activity">
+                <div class="activity-icon bg-primary text-white shadow-primary">
+                  <i class="fa fa-qrcode"></i>
+                </div>
+                <div class="activity-detail">
+                  <div class="mb-2">
+                    <span class="text-job text-primary">Step 4</span>
+                    <span class="bullet"></span>
+                  </div>
+                  <p>Point your phone to this screen to capture the code</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

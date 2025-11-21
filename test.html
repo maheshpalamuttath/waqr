@@ -26,9 +26,8 @@
       animation: spin 1s linear infinite;
       margin: auto;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .qr-area {
       display: flex;
       flex-direction: column;
@@ -45,12 +44,11 @@
 <div class="container-fluid mt-5">
   <div class="row justify-content-center">
 
+    <!-- LEFT PANEL -->
     <div class="col-sm-8">
       <div class="card card-neutral">
-
         <div class="card-header d-flex justify-content-between align-items-center">
           <h4>WhatsApp Connect</h4>
-
           <button class="btn btn-sm btn-neutral" id="logoutBtn">
             <i class="fas fa-sign-out-alt"></i>
           </button>
@@ -61,13 +59,12 @@
             <div class="spinner"></div>
           </div>
         </div>
-
       </div>
     </div>
 
+    <!-- RIGHT PANEL -->
     <div class="col-sm-4">
       <div class="card">
-
         <div class="card-header d-flex justify-content-between align-items-center">
           <h4>How To Scan?</h4>
           <a href="#" class="btn btn-sm btn-neutral">
@@ -114,127 +111,152 @@
 <script src="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.js"></script>
 
 <script>
-  const API_BASE = "https://whats-api.opensio.co.in/api";
-  const SESSION_ID = "20250818";
-  const API_KEY = "ee1a9bc9348141c5867893737aa878cc";
+/* ---------------------------------------------------------
+   CONFIG (Edit only this section)
+--------------------------------------------------------- */
+const CONFIG = {
+  API_BASE: "https://whats-api.opensio.co.in/api",
+  SESSION_ID: "20250818",
+  API_KEY: "ee1a9bc9348141c5867893737aa878cc",
 
-  document.addEventListener("DOMContentLoaded", () => {
-    checkSessionStatus();
+  ENDPOINTS: {
+    session: (id) => `/sessions/${id}`,
+    logout: (id) => `/sessions/${id}/logout`,
+    qr: (id) => `/${id}/auth/qr?format=image`,
+  }
+};
 
-    // Auto-refresh every 5 seconds
-    setInterval(checkSessionStatus, 5000);
 
-    document.getElementById("logoutBtn").addEventListener("click", forceLogout);
+/* ---------------------------------------------------------
+  MINI API WRAPPER
+--------------------------------------------------------- */
+async function apiRequest(url, options = {}) {
+  try {
+    const res = await fetch(CONFIG.API_BASE + url, {
+      ...options,
+      headers: {
+        "X-Api-Key": CONFIG.API_KEY,
+        ...(options.headers || {})
+      }
+    });
+
+    if (options.isImage) return res.blob();
+    return res.json();
+
+  } catch (err) {
+    console.error("API Error:", err);
+    return null;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   UI HELPERS
+--------------------------------------------------------- */
+function toast(msg, type="success") {
+  Toastify({
+    text: msg,
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    backgroundColor: type === "success" ? "#28a745" : "#dc3545"
+  }).showToast();
+}
+
+function showConnected(data) {
+  document.getElementById("qrArea").innerHTML = `
+    <div class="alert alert-success w-100">
+      <h4>WhatsApp Session <b>${data.name}</b> is Connected ✔</h4>
+      <p>User: <b>${data?.me?.pushName || "Unknown"}</b></p>
+    </div>
+  `;
+}
+
+function showDisconnected() {
+  const qrArea = document.getElementById("qrArea");
+
+  qrArea.innerHTML = `
+    <div id="spinner" class="spinner"></div>
+    <img id="qrImage" class="img-fluid" style="display:none;">
+
+    <p class="mt-3 text-danger">
+      Session not connected.<br>Click Reset to load a new QR code.
+    </p>
+
+    <button id="resetSessionBtn" class="btn btn-warning mt-2">
+      <i class="fas fa-redo-alt"></i> Reset Session
+    </button>
+  `;
+
+  document.getElementById("resetSessionBtn").addEventListener("click", forceLogout);
+}
+
+
+/* ---------------------------------------------------------
+   QR CODE LOADER
+--------------------------------------------------------- */
+async function loadQR() {
+  const qrImage = document.getElementById("qrImage");
+  const spinner = document.getElementById("spinner");
+
+  const blob = await apiRequest(CONFIG.ENDPOINTS.qr(CONFIG.SESSION_ID), { isImage: true });
+
+  if (blob) {
+    qrImage.src = URL.createObjectURL(blob);
+    qrImage.style.display = "block";
+    spinner.style.display = "none";
+  } else {
+    spinner.style.display = "none";
+    qrImage.alt = "Failed to load QR";
+  }
+}
+
+
+/* ---------------------------------------------------------
+   SESSION CHECK
+--------------------------------------------------------- */
+async function checkSessionStatus() {
+  const data = await apiRequest(CONFIG.ENDPOINTS.session(CONFIG.SESSION_ID));
+
+  if (data && data.status === "WORKING") {
+    showConnected(data);
+  } else {
+    showDisconnected();
+    loadQR();
+  }
+}
+
+
+/* ---------------------------------------------------------
+   FORCE LOGOUT
+--------------------------------------------------------- */
+async function forceLogout() {
+  const btn = document.getElementById("resetSessionBtn") || document.getElementById("logoutBtn");
+  btn.disabled = true;
+
+  toast("Resetting WhatsApp session…", "error");
+
+  await apiRequest(CONFIG.ENDPOINTS.logout(CONFIG.SESSION_ID), {
+    method: "POST"
   });
 
-  // SHOW TOAST
-  function toast(msg, type="success") {
-    Toastify({
-      text: msg,
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: type === "success" ? "#28a745" : "#dc3545"
-    }).showToast();
-  }
+  setTimeout(() => {
+    showDisconnected();
+    loadQR();
+    toast("Session reset. Scan the new QR.", "success");
+    btn.disabled = false;
+  }, 1200);
+}
 
-  // CHECK SESSION
-  function checkSessionStatus() {
-    fetch(`${API_BASE}/sessions/${SESSION_ID}`, {
-      headers: { "X-Api-Key": API_KEY }
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "WORKING") {
-        showConnected(data);
-      } else {
-        showDisconnected();
-        loadQR();
-      }
-    })
-    .catch(() => {
-      showDisconnected();
-      loadQR();
-    });
-  }
 
-  // UI: CONNECTED
-  function showConnected(data) {
-    const qrArea = document.getElementById("qrArea");
-
-    qrArea.innerHTML = `
-      <div class="alert alert-success w-100">
-        <h4>WhatsApp Session <b>${data.name}</b> is Connected ✔</h4>
-        <p>User: <b>${data?.me?.pushName || "Unknown"}</b></p>
-      </div>
-    `;
-  }
-
-  // UI: DISCONNECTED + RESET BUTTON
-  function showDisconnected() {
-    const qrArea = document.getElementById("qrArea");
-
-    qrArea.innerHTML = `
-      <div id="spinner" class="spinner"></div>
-      <img id="qrImage" class="img-fluid" style="display:none;">
-
-      <p class="mt-3 text-danger">
-        Session not connected.<br>Click Reset to load a new QR code.
-      </p>
-
-      <button id="resetSessionBtn" class="btn btn-warning mt-2">
-        <i class="fas fa-redo-alt"></i> Reset Session
-      </button>
-    `;
-
-    document.getElementById("resetSessionBtn").addEventListener("click", forceLogout);
-  }
-
-  // LOAD QR
-  function loadQR() {
-    const qrImage = document.getElementById("qrImage");
-    const spinner = document.getElementById("spinner");
-
-    fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`, {
-      headers: { "accept": "image/png", "X-Api-Key": API_KEY }
-    })
-    .then(res => res.blob())
-    .then(blob => {
-      qrImage.src = URL.createObjectURL(blob);
-      qrImage.style.display = "block";
-      spinner.style.display = "none";
-    })
-    .catch(() => {
-      spinner.style.display = "none";
-      qrImage.alt = "Failed to load QR";
-    });
-  }
-
-  // FORCE LOGOUT
-  function forceLogout() {
-    const btn = document.getElementById("resetSessionBtn") || document.getElementById("logoutBtn");
-    btn.disabled = true;
-
-    toast("Resetting WhatsApp session…", "error");
-
-    fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`, {
-      method: "POST",
-      headers: { "X-Api-Key": API_KEY }
-    })
-    .then(res => res.json())
-    .then(() => {
-      setTimeout(() => {
-        showDisconnected();
-        loadQR();
-        toast("Session reset. Scan the new QR.", "success");
-        btn.disabled = false;
-      }, 1200);
-    })
-    .catch(() => {
-      toast("Logout failed. Try again.", "error");
-      btn.disabled = false;
-    });
-  }
+/* ---------------------------------------------------------
+   BOOTSTRAP
+--------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  checkSessionStatus();
+  setInterval(checkSessionStatus, 5000);
+  document.getElementById("logoutBtn").addEventListener("click", forceLogout);
+});
 </script>
 
 </body>

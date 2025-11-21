@@ -11,19 +11,19 @@
 
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-  
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/nucleo/css/nucleo.css" type="text/css">
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
-  
-  <!-- CSS Files -->
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/argon.css" type="text/css">
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/custom.css" type="text/css">
-  <link rel="stylesheet" type="text/css" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css">
-  <link rel="stylesheet" type="text/css" href="https://tinyurl.com/2rwemhe6/assets/plugins/pace/pace-theme-default.min.css">
-  <link rel="stylesheet" type="text/css" href="https://tinyurl.com/2rwemhe6/assets/css/qr-page.css">
 
-  <!-- Custom Styles for Spinner -->
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/nucleo/css/nucleo.css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/argon.css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/custom.css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/plugins/pace/pace-theme-default.min.css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/qr-page.css">
+
+  <!-- Spinner Styles -->
   <style>
     .spinner {
       border: 4px solid rgba(0, 0, 0, 0.1);
@@ -34,14 +34,12 @@
       animation: spin 1s linear infinite;
       margin: auto;
     }
+
     @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
+
     .qr-area {
       display: flex;
       justify-content: center;
@@ -52,8 +50,6 @@
 </head>
 
 <body>
-
-  <!-- Main content -->
 
   <!-- Header -->
   <div class="header pb-6">
@@ -75,100 +71,130 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row justify-content-center">
+
       <div class="col-sm-8">
         <div class="card card-neutral">
+
           <div class="card-header d-flex justify-content-between align-items-center">
             <h4>Scan the QR Code On Your WhatsApp Mobile App</h4>
             <div class="card-header-action loggout_area">
-              <a href="javascript:void(0)" class="btn btn-sm btn-neutral logout-btn" data-id="d5bafff9-7e99-482c-803f-9b0d17b381ec">
+              <a href="javascript:void(0)" class="btn btn-sm btn-neutral logout-btn"
+                 data-id="d5bafff9-7e99-482c-803f-9b0d17b381ec">
                 <i class="fas fa-sign-out-alt"></i>
               </a>
             </div>
           </div>
+
           <div class="card-body">
             <div class="d-flex justify-content-center qr-area">
-              <!-- Spinner Placeholder -->
+
+              <!-- Spinner -->
               <div id="spinner" class="spinner"></div>
-              
-              <!-- QR Code Image -->
-              <img id="qrImage" src="https://whats-api.opensio.co.in/api/20250818/auth/qr?format=image" alt="QR Code Image" class="img-fluid"
-                   style="display: none;" 
-                   onload="document.getElementById('spinner').style.display='none'; this.style.display='block';"
-                   onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0K...';">
+
+              <!-- QR Image (will be filled dynamically) -->
+              <img id="qrImage" class="img-fluid" style="display:none;" alt="QR Code Image">
             </div>
           </div>
+
         </div>
       </div>
+
       <div class="col-sm-4">
         <div class="card">
+
           <div class="card-header d-flex justify-content-between align-items-center">
             <h4>How To Scan?</h4>
             <div class="card-header-action">
               <a href="#" class="btn btn-sm btn-neutral">
-                <i class="fas fa-lightbulb"></i>&nbspGuide
+                <i class="fas fa-lightbulb"></i>&nbsp;Guide
               </a>
             </div>
           </div>
+
           <div class="card-body">
-            <img src="https://tinyurl.com/2rwemhe6/uploads/scan-demo.gif" class="w-100" alt="Scan Demo">
+            <img src="https://tinyurl.com/2rwemhe6/uploads/scan-demo.gif"
+                 class="w-100" alt="Scan Demo">
           </div>
+
           <div class="card-footer">
             <div class="activities">
+
               <div class="activity">
                 <div class="activity-icon bg-primary text-white shadow-primary">
                   <i class="ni ni-mobile-button"></i>
                 </div>
                 <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 1</span>
-                    <span class="bullet"></span>
-                  </div>
+                  <span class="text-job text-primary">Step 1</span>
                   <p>Open WhatsApp on your phone</p>
                 </div>
               </div>
+
               <div class="activity">
                 <div class="activity-icon bg-primary text-white shadow-primary">
                   <i class="ni ni-active-40"></i>
                 </div>
                 <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 2</span>
-                    <span class="bullet"></span>
-                  </div>
+                  <span class="text-job text-primary">Step 2</span>
                   <p>Tap Menu or Settings and select Linked Devices</p>
                 </div>
               </div>
+
               <div class="activity">
                 <div class="activity-icon bg-primary text-white shadow-primary">
                   <i class="ni ni-active-40"></i>
                 </div>
                 <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 3</span>
-                    <span class="bullet"></span>
-                  </div>
+                  <span class="text-job text-primary">Step 3</span>
                   <p>Tap on Link a Device</p>
                 </div>
               </div>
+
               <div class="activity">
                 <div class="activity-icon bg-primary text-white shadow-primary">
                   <i class="fa fa-qrcode"></i>
                 </div>
                 <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 4</span>
-                    <span class="bullet"></span>
-                  </div>
+                  <span class="text-job text-primary">Step 4</span>
                   <p>Point your phone to this screen to capture the code</p>
                 </div>
               </div>
+
             </div>
           </div>
+
         </div>
       </div>
+
     </div>
   </div>
 
-</body>
+  <!-- QR Loader Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const qrImage = document.getElementById("qrImage");
+      const spinner = document.getElementById("spinner");
 
+      fetch("https://whats-api.opensio.co.in/api/20250818/auth/qr?format=image", {
+        method: "GET",
+        headers: {
+          "accept": "image/png",
+          "X-Api-Key": "ee1a9bc9348141c5867893737aa878cc"
+        }
+      })
+        .then(response => response.blob())
+        .then(blob => {
+          const imgUrl = URL.createObjectURL(blob);
+          qrImage.src = imgUrl;
+          qrImage.style.display = "block";
+          spinner.style.display = "none";
+        })
+        .catch(err => {
+          spinner.style.display = "none";
+          qrImage.alt = "Failed to load QR";
+          console.error("QR Load Error:", err);
+        });
+    });
+  </script>
+
+</body>
 </html>

@@ -1,176 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>WhatsApp Connect</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsApp API Server Connect</title>
 
-  <!-- Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Icons -->
+  <!-- Argon / Original CSS -->
   <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/nucleo/css/nucleo.css">
   <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
 
-  <!-- CSS -->
+  <!-- FontAwesome 6 (chosen) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Argon + custom -->
   <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/argon.css">
   <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/custom.css">
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css">
+  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css" />
 
   <style>
+    :root{
+      --brand:#5b73e8;
+      --muted:#6b7280;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container-fluid {
+      max-width: 1200px;
+      margin: 36px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(16,24,40,0.06);
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 0;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(15,23,42,0.04);
+    }
+
+    h3, h4 {
+      margin: 0;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-neutral { background: #eef2ff; color: #0f172a; }
+    .btn-neutral:hover { transform: translateY(-1px); }
+
+    .btn-warning { background: #ffdd57; color: #111; }
+    .btn-warning:hover { transform: translateY(-1px); }
+
+    .qr-area {
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+    }
+
     .spinner {
-      border: 4px solid rgba(0, 0, 0, .1);
-      border-left-color: #3b5998;
+      border: 4px solid rgba(0,0,0,0.08);
+      border-left-color: var(--brand);
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      width: 50px; height: 50px;
       animation: spin 1s linear infinite;
-      margin: auto;
+      margin: 8px auto;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .qr-area {
+    /* Right card specifics (modern look) */
+    .steps .step {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      min-height: 260px;
-      text-align: center;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .step-icon {
+      background: linear-gradient(135deg, rgba(91,115,232,0.95), rgba(91,115,232,0.8));
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 8px 20px rgba(91,115,232,0.18);
+      flex-shrink: 0;
     }
 
-    .footer_lnk {
-      color: #5e72e4;
-      font-weight: 600;
-      text-decoration: none;
+    .guide-img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 12px;
     }
-    .footer_lnk:hover { text-decoration: underline; }
 
     footer {
+      text-align: center;
+      padding: 18px;
+      background: transparent;
       font-size: 14px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    footer a { color: var(--brand); font-weight: 600; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* Responsive layout */
+    .row {
+      display:flex;
+      gap:20px;
+      flex-wrap: wrap;
+    }
+    .col-left { flex: 1 1 65%; min-width: 300px; }
+    .col-right { flex: 1 1 32%; min-width: 260px; }
+
+    /* small screens */
+    @media (max-width: 768px) {
+      .row { flex-direction: column; }
+      .card { padding: 14px; border-radius: 10px; }
+      .qr-area { min-height: 260px; }
+    }
+
+    /* small helper */
+    .alert-success {
+      background: #f0fdf4;
+      border-radius: 8px;
+      padding: 14px;
+      color: #065f46;
+      border: 1px solid rgba(16,185,129,0.08);
     }
   </style>
 </head>
-
 <body>
 
-<div class="container-fluid mt-5">
-  <div class="row justify-content-center">
+<div class="container-fluid">
+  <div class="row">
 
-    <!-- LEFT -->
-    <div class="col-sm-8">
+    <!-- LEFT: Original Argon QR card (keeps original look/behaviour) -->
+    <div class="col-left">
       <div class="card card-neutral">
-
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h4>WhatsApp Connect (Angamaly Muncipal Library</h4>
-          <button class="btn btn-sm btn-neutral" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
-        </div>
-
-        <div class="card-body">
-          <div class="qr-area" id="qrArea">
-            <div class="spinner"></div>
+        <div class="card-header">
+          <h3>WhatsApp API Server Connect (Default)</h3>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn btn-neutral" id="logoutBtn" title="Logout / Reset">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
           </div>
         </div>
 
+        <div class="card-body" style="padding:0; margin-top:12px;">
+          <div id="qrArea" class="qr-area">
+            <div class="spinner" id="spinnerStarter"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RIGHT -->
-    <div class="col-sm-4">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h4>How To Scan?</h4>
-            <div class="card-header-action">
-              <a href="#" class="btn btn-sm btn-neutral">
-                <i class="fas fa-lightbulb"></i>&nbspGuide
-              </a>
-            </div>
-          </div>
-          <div class="card-body">
-            <img src="https://tinyurl.com/2rwemhe6/uploads/scan-demo.gif" class="w-100" alt="Scan Demo">
-          </div>
-          <div class="card-footer">
-            <div class="activities">
-              <div class="activity">
-                <div class="activity-icon bg-primary text-white shadow-primary">
-                  <i class="ni ni-mobile-button"></i>
-                </div>
-                <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 1</span>
-                    <span class="bullet"></span>
-                  </div>
-                  <p>Open WhatsApp on your phone</p>
-                </div>
-              </div>
-              <div class="activity">
-                <div class="activity-icon bg-primary text-white shadow-primary">
-                  <i class="ni ni-active-40"></i>
-                </div>
-                <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 2</span>
-                    <span class="bullet"></span>
-                  </div>
-                  <p>Tap Menu or Settings and select Linked Devices</p>
-                </div>
-              </div>
-              <div class="activity">
-                <div class="activity-icon bg-primary text-white shadow-primary">
-                  <i class="ni ni-active-40"></i>
-                </div>
-                <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 3</span>
-                    <span class="bullet"></span>
-                  </div>
-                  <p>Tap on Link a Device</p>
-                </div>
-              </div>
-              <div class="activity">
-                <div class="activity-icon bg-primary text-white shadow-primary">
-                  <i class="fa fa-qrcode"></i>
-                </div>
-                <div class="activity-detail">
-                  <div class="mb-2">
-                    <span class="text-job text-primary">Step 4</span>
-                    <span class="bullet"></span>
-                  </div>
-                  <p>Point your phone to this screen to capture the code</p>
-                </div>
+    <!-- RIGHT: Modern how-to card (from your sample, with FA6 icons) -->
+    <div class="col-right">
+      <div class="card">
+        <div class="card-header">
+          <h4>How to Scan</h4>
+          <button class="btn btn-neutral" onclick="document.getElementById('guideImg').scrollIntoView({behavior:'smooth'})" title="Guide">
+            <i class="fa-solid fa-lightbulb"></i>&nbsp;Guide
+          </button>
+        </div>
+
+        <div style="padding-top:12px;">
+          <img id="guideImg" src="https://tinyurl.com/2rwemhe6/uploads/scan-demo.gif" alt="Scan Demo" class="guide-img" />
+
+          <div class="steps" aria-hidden="false">
+            <div class="step">
+              <div class="step-icon"><i class="fa-solid fa-mobile-screen-button" style="font-size:18px;"></i></div>
+              <div><strong>Step 1:</strong> Open WhatsApp on your phone</div>
             </div>
 
+            <div class="step">
+              <div class="step-icon"><i class="fa-solid fa-gear" style="font-size:18px;"></i></div>
+              <div><strong>Step 2:</strong> Tap <em>Settings</em> (or Menu) → <em>Linked Devices</em></div>
+            </div>
+
+            <div class="step">
+              <div class="step-icon"><i class="fa-solid fa-link" style="font-size:18px;"></i></div>
+              <div><strong>Step 3:</strong> Tap <em>Link a device</em></div>
+            </div>
+
+            <div class="step">
+              <div class="step-icon"><i class="fa-solid fa-qrcode" style="font-size:20px;"></i></div>
+              <div><strong>Step 4:</strong> Point your phone at this screen to scan the QR</div>
+            </div>
           </div>
         </div>
 
+        <div style="padding-top:8px; border-top: 1px solid rgba(15,23,42,0.04); margin-top:12px;">
+          <small style="color:var(--muted);">If the session is not connected, click <em>Reset Session</em> to load a new QR code.</small>
+        </div>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="mt-5 py-3 style=background-color: transparent;">
-  <div class="container">
-    <div class="row">
-
-      <div class="col-md-6 text-center mb-2">
-        &copy; <script>document.write(new Date().getFullYear())</script>
-        <a href="#" target="_blank" class="footer_lnk">WhatsApp Connect</a>.
-        All Rights Reserved.
-      </div>
-
-      <div class="col-md-6 text-center mb-2">
-        Crafted by
-        <a href="https://maheshpalamuttath.info/" target="_blank" class="footer_lnk" rel="noopener">
-          Mahesh Palamuttath
-        </a>
-      </div>
-
-    </div>
-  </div>
+<footer>
+  &copy; <script>document.write(new Date().getFullYear())</script>
+  <a href="#" target="_blank">WhatsApp Connect</a> — All Rights Reserved.<br>
+  Crafted by <a href="https://maheshpalamuttath.info" target="_blank" rel="noopener">Mahesh Palamuttath</a>
 </footer>
 
+<!-- Toastify -->
 <script src="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.js"></script>
 
 <script>
@@ -180,17 +251,18 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     checkSessionStatus();
+    // poll session status
     setInterval(checkSessionStatus, 5000);
     document.getElementById("logoutBtn").addEventListener("click", forceLogout);
   });
 
-  function toast(msg, type="success") {
+  function toast(msg, type = "success") {
     Toastify({
       text: msg,
       duration: 3000,
       gravity: "top",
       position: "right",
-      backgroundColor: type === "success" ? "#28a745" : "#dc3545"
+      backgroundColor: type === "success" ? "#28a745" : "#dc3545",
     }).showToast();
   }
 
@@ -198,73 +270,80 @@
     fetch(`${API_BASE}/sessions/${SESSION_ID}`, {
       headers: { "X-Api-Key": API_KEY }
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "WORKING") {
-        showConnected(data);
-      } else {
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === "WORKING") {
+          showConnected(data);
+        } else {
+          showDisconnected();
+          loadQR();
+        }
+      })
+      .catch(() => {
         showDisconnected();
         loadQR();
-      }
-    })
-    .catch(() => {
-      showDisconnected();
-      loadQR();
-    });
+      });
   }
 
   function showConnected(data) {
     const qrArea = document.getElementById("qrArea");
-
     qrArea.innerHTML = `
-      <div class="alert alert-success w-100">
-        <h4>WhatsApp Session <b>${data.name}</b> is Connected ✔</h4>
-        <p>User: <b>${data?.me?.pushName || "Unknown"}</b></p>
+      <div class="alert-success" style="width:100%;">
+        <h4 style="margin:0 0 6px 0;"><i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
+          WhatsApp Session <strong>${escapeHtml(data.name || SESSION_ID)}</strong> is connected
+        </h4>
+        <div><strong>User:</strong> ${escapeHtml(data?.me?.pushName || "Unknown")}</div>
       </div>
     `;
   }
 
   function showDisconnected() {
     const qrArea = document.getElementById("qrArea");
-
     qrArea.innerHTML = `
-      <div id="spinner" class="spinner"></div>
-      <img id="qrImage" class="img-fluid" style="display:none;">
-
-      <p class="mt-3 text-danger">
-        Session not connected.<br>Click Reset to load a new QR code.
-      </p>
-
-      <button id="resetSessionBtn" class="btn btn-warning mt-2">
-        <i class="fas fa-redo-alt"></i> Reset Session
-      </button>
+      <div class="spinner" id="spinnerInner"></div>
+      <img id="qrImage" class="img-fluid" style="display:none; margin-top:16px; width:260px; border-radius:8px;" />
+      <p style="margin-top:14px; color:#bb1a1a;">Session not connected.<br>Click Reset to load a new QR code.</p>
+      <button class="btn btn-warning" id="resetSessionBtn"><i class="fa-solid fa-rotate-right"></i> Reset Session</button>
     `;
 
-    document.getElementById("resetSessionBtn").addEventListener("click", forceLogout);
+    const btn = document.getElementById("resetSessionBtn");
+    if (btn) btn.addEventListener("click", forceLogout);
   }
 
   function loadQR() {
-    const qrImage = document.getElementById("qrImage");
-    const spinner = document.getElementById("spinner");
+    const qrImg = document.getElementById("qrImage");
+    const spinner = document.getElementById("spinnerInner") || document.getElementById("spinnerStarter");
+
+    if (!qrImg) return;
+
+    // show spinner while fetching
+    if (spinner) spinner.style.display = "block";
 
     fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`, {
       headers: { "accept": "image/png", "X-Api-Key": API_KEY }
     })
-    .then(res => res.blob())
-    .then(blob => {
-      qrImage.src = URL.createObjectURL(blob);
-      qrImage.style.display = "block";
-      spinner.style.display = "none";
-    })
-    .catch(() => {
-      spinner.style.display = "none";
-      qrImage.alt = "Failed to load QR";
-    });
+      .then(res => {
+        if (!res.ok) throw new Error('QR fetch failed');
+        return res.blob();
+      })
+      .then(blob => {
+        qrImg.src = URL.createObjectURL(blob);
+        qrImg.style.display = "block";
+        if (spinner) spinner.style.display = "none";
+      })
+      .catch(() => {
+        if (spinner) spinner.style.display = "none";
+        if (qrImg) {
+          qrImg.style.display = "block";
+          qrImg.alt = "Failed to load QR";
+        }
+      });
   }
 
   function forceLogout() {
+    // chooses whichever button exists (reset inside qr card or top logout)
     const btn = document.getElementById("resetSessionBtn") || document.getElementById("logoutBtn");
-    btn.disabled = true;
+    if (btn) btn.disabled = true;
 
     toast("Resetting WhatsApp session…", "error");
 
@@ -272,21 +351,28 @@
       method: "POST",
       headers: { "X-Api-Key": API_KEY }
     })
-    .then(res => res.json())
-    .then(() => {
-      setTimeout(() => {
-        showDisconnected();
-        loadQR();
-        toast("Session reset. Scan the new QR.", "success");
-        btn.disabled = false;
-      }, 1200);
-    })
-    .catch(() => {
-      toast("Logout failed. Try again.", "error");
-      btn.disabled = false;
+      .then(res => {
+        // even if server returns non-json, continue
+        setTimeout(() => {
+          showDisconnected();
+          loadQR();
+          toast("Session reset. Scan the new QR.", "success");
+          if (btn) btn.disabled = false;
+        }, 1000);
+      })
+      .catch(() => {
+        toast("Logout failed. Try again.", "error");
+        if (btn) btn.disabled = false;
+      });
+  }
+
+  // small escape helper to avoid injecting html from API values
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, function(m) {
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m];
     });
   }
 </script>
-
 </body>
 </html>

@@ -21,36 +21,143 @@
   <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css" />
 
   <style>
-    :root{ --brand:#5b73e8; --muted:#6b7280; }
-    body { font-family: 'Inter', sans-serif; background: #f5f7fb; margin: 0; padding: 0; }
-    .container-fluid { max-width: 1200px; margin: 36px auto; padding: 0 16px; }
-    .card { background: #fff; border-radius: 14px; box-shadow: 0 8px 25px rgba(16,24,40,0.06); padding: 18px; margin-bottom: 20px; border: 0; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid rgba(15,23,42,0.04); }
-    h3,h4 { margin:0; font-weight:600; color:#0f172a; }
-    .btn { padding:8px 14px; border-radius:10px; border:none; cursor:pointer; font-size:14px; transition:.2s ease-in-out; display:inline-flex; align-items:center; gap:8px; }
-    .btn-neutral { background:#eef2ff; color:#0f172a; }
-    .btn-neutral:hover { transform:translateY(-1px); }
-    .btn-warning { background:#ffdd57; color:#111; }
-    .btn-warning:hover { transform:translateY(-1px); }
-    .qr-area { min-height:320px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:18px; }
-    .spinner { border:4px solid rgba(0,0,0,0.08); border-left-color:var(--brand); width:56px; height:56px; border-radius:50%; animation:spin 1s linear infinite; margin:8px auto; }
+    :root{
+      --brand:#5b73e8;
+      --muted:#6b7280;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container-fluid {
+      max-width: 1200px;
+      margin: 36px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(16,24,40,0.06);
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 0;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(15,23,42,0.04);
+    }
+
+    h3, h4 {
+      margin: 0;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-neutral { background: #eef2ff; color: #0f172a; }
+    .btn-neutral:hover { transform: translateY(-1px); }
+
+    .btn-warning { background: #ffdd57; color: #111; }
+    .btn-warning:hover { transform: translateY(-1px); }
+
+    .qr-area {
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+    }
+
+    .spinner {
+      border: 4px solid rgba(0,0,0,0.08);
+      border-left-color: var(--brand);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 8px auto;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .steps .step { display:flex; align-items:center; gap:14px; margin:14px 0; }
-    .step-icon { background:linear-gradient(135deg, rgba(91,115,232,0.95), rgba(91,115,232,0.8)); width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; box-shadow:0 8px 20px rgba(91,115,232,0.18); flex-shrink:0; }
-    .guide-img { width:100%; border-radius:12px; margin-bottom:12px; }
+    .steps .step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .step-icon {
+      background: linear-gradient(135deg, rgba(91,115,232,0.95), rgba(91,115,232,0.8));
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 8px 20px rgba(91,115,232,0.18);
+      flex-shrink: 0;
+    }
 
-    footer { text-align:center; padding:18px; background:transparent; font-size:14px; color:var(--muted); margin-top:8px; }
-    footer a { color:var(--brand); font-weight:600; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
+    .guide-img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
 
-    .row { display:flex; gap:20px; flex-wrap:wrap; }
-    .col-left { flex:1 1 65%; min-width:300px; }
-    .col-right { flex:1 1 32%; min-width:260px; }
+    footer {
+      text-align: center;
+      padding: 18px;
+      background: transparent;
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    footer a { color: var(--brand); font-weight: 600; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
 
-    @media (max-width:768px) { .row { flex-direction:column; } .card { padding:14px; border-radius:10px; } .qr-area { min-height:260px; } }
+    .row {
+      display:flex;
+      gap:20px;
+      flex-wrap: wrap;
+    }
+    .col-left { flex: 1 1 65%; min-width: 300px; }
+    .col-right { flex: 1 1 32%; min-width: 260px; }
 
-    .alert-success { background:#f0fdf4; border-radius:8px; padding:14px; color:#065f46; border:1px solid rgba(16,185,129,0.08); }
+    @media (max-width: 768px) {
+      .row { flex-direction: column; }
+      .card { padding: 14px; border-radius: 10px; }
+      .qr-area { min-height: 260px; }
+    }
+
+    .alert-success {
+      background: #f0fdf4;
+      border-radius: 8px;
+      padding: 14px;
+      color: #065f46;
+      border: 1px solid rgba(16,185,129,0.08);
+    }
   </style>
 </head>
 <body>
@@ -76,17 +183,6 @@
           </div>
         </div>
       </div>
-
-      <!-- INFO CARD -->
-      <div class="card">
-        <div class="card-header">
-          <h4>Auto Test Message</h4>
-          <i class="fa-solid fa-robot"></i>
-        </div>
-        <p style="margin-top:10px; color:#555;">
-          A message will be automatically sent to your WhatsApp number when session connects.
-        </p>
-      </div>
     </div>
 
     <!-- RIGHT -->
@@ -107,14 +203,17 @@
               <div class="step-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
               <div><strong>Step 1:</strong> Open WhatsApp on your phone</div>
             </div>
+
             <div class="step">
               <div class="step-icon"><i class="fa-solid fa-gear"></i></div>
               <div><strong>Step 2:</strong> Tap <em>Settings</em> → <em>Linked Devices</em></div>
             </div>
+
             <div class="step">
               <div class="step-icon"><i class="fa-solid fa-link"></i></div>
               <div><strong>Step 3:</strong> Tap <em>Link a device</em></div>
             </div>
+
             <div class="step">
               <div class="step-icon"><i class="fa-solid fa-qrcode"></i></div>
               <div><strong>Step 4:</strong> Scan the QR</div>
@@ -145,111 +244,168 @@
   const SESSION_ID = "20251122";
   const API_KEY = "ee1a9bc9348141c5867893737aa878cc";
 
-  // ✅ Use localStorage to persist message-sent status
-  let messageSent = localStorage.getItem("autoMsgSent") === "true";
-
   document.addEventListener("DOMContentLoaded", () => {
     checkSessionStatus();
     setInterval(checkSessionStatus, 5000);
     document.getElementById("logoutBtn").addEventListener("click", forceLogout);
   });
 
-  function toast(msg,type="success"){ Toastify({ text:msg,duration:3000,gravity:"top",position:"right",backgroundColor:type==="success"?"#28a745":"#dc3545" }).showToast(); }
-
-  function checkSessionStatus(){
-    fetch(`${API_BASE}/sessions/${SESSION_ID}`,{ headers:{"X-Api-Key":API_KEY} })
-      .then(res=>res.json())
-      .then(data=>{ 
-        if(data && data.status==="WORKING") showConnected(data); 
-        else { showDisconnected(); loadQR(); messageSent=false; localStorage.removeItem("autoMsgSent"); } 
-      })
-      .catch(()=>{ showDisconnected(); loadQR(); messageSent=false; localStorage.removeItem("autoMsgSent"); });
+  function toast(msg, type = "success") {
+    Toastify({
+      text: msg,
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: type === "success" ? "#28a745" : "#dc3545",
+    }).showToast();
   }
 
-  function showConnected(data){
-    const qrArea=document.getElementById("qrArea");
-    qrArea.innerHTML=`<div class="spinner"></div><p>Loading profile…</p>`;
+  function checkSessionStatus() {
+    fetch(`${API_BASE}/sessions/${SESSION_ID}`, {
+      headers: { "X-Api-Key": API_KEY }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === "WORKING") {
+          showConnected(data);
+        } else {
+          showDisconnected();
+          loadQR();
+        }
+      })
+      .catch(() => {
+        showDisconnected();
+        loadQR();
+      });
+  }
 
-    fetch(`${API_BASE}/${SESSION_ID}/profile`,{ headers:{"X-Api-Key":API_KEY} })
-      .then(res=>res.json())
-      .then(profile=>{
+  /* UPDATED — Includes phone number */
+  function showConnected(data) {
+    const qrArea = document.getElementById("qrArea");
+
+    qrArea.innerHTML = `
+      <div class="spinner"></div>
+      <p>Loading profile…</p>
+    `;
+
+    fetch(`${API_BASE}/${SESSION_ID}/profile`, {
+      headers: { "X-Api-Key": API_KEY }
+    })
+      .then(res => res.json())
+      .then(profile => {
         const picture = profile.picture || "";
         const username = profile.name || data?.me?.pushName || "Unknown";
+
+        // Extract phone number from profile.id
         const rawId = profile.id || data?.me?.id || "";
         const phoneNumber = rawId.includes("@") ? rawId.split("@")[0] : "Unknown";
 
         qrArea.innerHTML = `
-          <div class="alert-success" style="width:100%; display:flex; align-items:center; gap:18px;">
-            <img src="${picture}" alt="Profile Picture" style="width:72px; height:72px; border-radius:50%; object-fit:cover; box-shadow:0 6px 16px rgba(0,0,0,0.18);" />
+          <div class="alert-success" style="
+            width:100%;
+            display:flex;
+            align-items:center;
+            gap:18px;
+          ">
+            <img src="${picture}"
+              alt="Profile Picture"
+              style="
+                width:72px;
+                height:72px;
+                border-radius:50%;
+                object-fit:cover;
+                box-shadow:0 6px 16px rgba(0,0,0,0.18);
+              "
+            />
+
             <div style="line-height:1.4;">
-              <h4 style="margin:0 0 6px 0; display:flex; align-items:center;">
+              <h4 style="margin:0 0 6px 0; display:flex; align-items:center; flex-wrap:nowrap; white-space:nowrap;">
                 <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
-                WhatsApp Session <strong style="margin:0 4px;">${escapeHtml(data.name||SESSION_ID)}</strong> is connected
+                WhatsApp Session <strong style="margin:0 4px;">${escapeHtml(data.name || SESSION_ID)}</strong> is connected
               </h4>
+
               <div><strong>User:</strong> ${escapeHtml(username)}</div>
               <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
             </div>
           </div>
         `;
-
-        // ✅ Send auto message only once per session (persistent)
-        if(!messageSent){
-          autoSendTestMessage(phoneNumber, username);
-          messageSent=true;
-          localStorage.setItem("autoMsgSent","true");
-        }
-
       })
-      .catch(()=>{ qrArea.innerHTML=`<div class="alert-success" style="width:100%;"><h4><i class="fa-solid fa-check-circle"></i> Connected</h4><div><strong>User:</strong> ${escapeHtml(data?.me?.pushName||"Unknown")}</div><small style="color:#bb1a1a;">(Profile image unavailable)</small></div>`; });
+      .catch(() => {
+        qrArea.innerHTML = `
+          <div class="alert-success" style="width:100%;">
+            <h4><i class="fa-solid fa-check-circle"></i> Connected</h4>
+            <div><strong>User:</strong> ${escapeHtml(data?.me?.pushName || "Unknown")}</div>
+            <small style="color:#bb1a1a;">(Profile image unavailable)</small>
+          </div>
+        `;
+      });
   }
 
-  function showDisconnected(){
-    const qrArea=document.getElementById("qrArea");
+  function showDisconnected() {
+    const qrArea = document.getElementById("qrArea");
     qrArea.innerHTML = `
       <div class="spinner" id="spinnerInner"></div>
       <img id="qrImage" class="img-fluid" style="display:none; margin-top:16px; width:260px; border-radius:8px;" />
       <p style="margin-top:14px; color:#bb1a1a;">Session not connected.<br>Click Reset to load a new QR code.</p>
       <button class="btn btn-warning" id="resetSessionBtn"><i class="fa-solid fa-rotate-right"></i> Reset Session</button>
     `;
-    document.getElementById("resetSessionBtn").addEventListener("click", forceLogout);
+
+    const btn = document.getElementById("resetSessionBtn");
+    if (btn) btn.addEventListener("click", forceLogout);
   }
 
-  function loadQR(){
-    const qrImg=document.getElementById("qrImage");
-    const spinner=document.getElementById("spinnerInner")||document.getElementById("spinnerStarter");
-    if(!qrImg) return;
-    if(spinner) spinner.style.display="block";
+  function loadQR() {
+    const qrImg = document.getElementById("qrImage");
+    const spinner = document.getElementById("spinnerInner") || document.getElementById("spinnerStarter");
+    if (!qrImg) return;
 
-    fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`,{ headers:{"accept":"image/png","X-Api-Key":API_KEY} })
-      .then(res=>res.blob())
-      .then(blob=>{ qrImg.src=URL.createObjectURL(blob); qrImg.style.display="block"; if(spinner) spinner.style.display="none"; })
-      .catch(()=>{ if(spinner) spinner.style.display="none"; });
+    if (spinner) spinner.style.display = "block";
+
+    fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`, {
+      headers: { "accept": "image/png", "X-Api-Key": API_KEY }
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        qrImg.src = URL.createObjectURL(blob);
+        qrImg.style.display = "block";
+        if (spinner) spinner.style.display = "none";
+      })
+      .catch(() => {
+        if (spinner) spinner.style.display = "none";
+      });
   }
 
-  function forceLogout(){
-    toast("Resetting WhatsApp session…","error");
-    messageSent=false;
-    localStorage.removeItem("autoMsgSent"); // ✅ reset persistent flag
-    fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`,{ method:"POST", headers:{"X-Api-Key":API_KEY} })
-      .then(()=>{ setTimeout(()=>{ showDisconnected(); loadQR(); toast("Session reset. Scan the new QR.", "success"); },1000); })
-      .catch(()=>toast("Logout failed. Try again.","error"));
+  function forceLogout() {
+    const btn = document.getElementById("resetSessionBtn") || document.getElementById("logoutBtn");
+    if (btn) btn.disabled = true;
+
+    toast("Resetting WhatsApp session…", "error");
+
+    fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`, {
+      method: "POST",
+      headers: { "X-Api-Key": API_KEY }
+    })
+      .then(() => {
+        setTimeout(() => {
+          showDisconnected();
+          loadQR();
+          toast("Session reset. Scan the new QR.", "success");
+          if (btn) btn.disabled = false;
+        }, 1000);
+      })
+      .catch(() => {
+        toast("Logout failed. Try again.", "error");
+        if (btn) btn.disabled = false;
+      });
   }
 
-  function autoSendTestMessage(connectedNumber, pushName){
-    const message=`WhatsApp (${connectedNumber} - ${pushName}) with session ID {{SESSION}} is connected to API server successfully!`.replace("{{SESSION}}",SESSION_ID);
-    const myNumber="919567664972";
-
-    const payload1={ chatId:`${connectedNumber}@c.us`, text:message, session:SESSION_ID };
-    const payload2={ chatId:`${myNumber}@c.us`, text:message, session:SESSION_ID };
-
-    fetch(`${API_BASE}/sendText`,{ method:"POST", headers:{ "accept":"application/json","Content-Type":"application/json","X-Api-Key":API_KEY }, body:JSON.stringify(payload1) })
-      .then(()=> fetch(`${API_BASE}/sendText`,{ method:"POST", headers:{ "accept":"application/json","Content-Type":"application/json","X-Api-Key":API_KEY }, body:JSON.stringify(payload2) }))
-      .then(()=> toast("Connection message sent to both numbers!","success"))
-      .catch(()=> toast("Failed to send connection message.","error"));
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])
+    );
   }
-
-  function escapeHtml(str){ if(!str) return ''; return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
 </script>
+
 </body>
 </html>

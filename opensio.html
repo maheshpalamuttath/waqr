@@ -279,7 +279,7 @@
       });
   }
 
-  /* ✅ UPDATED FUNCTION — profile picture included */
+  /* UPDATED — Includes phone number */
   function showConnected(data) {
     const qrArea = document.getElementById("qrArea");
 
@@ -296,6 +296,10 @@
         const picture = profile.picture || "";
         const username = profile.name || data?.me?.pushName || "Unknown";
 
+        // Extract phone number from profile.id
+        const rawId = profile.id || data?.me?.id || "";
+        const phoneNumber = rawId.includes("@") ? rawId.split("@")[0] : "Unknown";
+
         qrArea.innerHTML = `
           <div class="alert-success" style="
             width:100%;
@@ -303,7 +307,6 @@
             align-items:center;
             gap:18px;
           ">
-
             <img src="${picture}"
               alt="Profile Picture"
               style="
@@ -317,13 +320,13 @@
 
             <div style="line-height:1.4;">
               <h4 style="margin:0 0 6px 0; display:flex; align-items:center; flex-wrap:nowrap; white-space:nowrap;">
-  <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
-  WhatsApp Session <strong style="margin:0 4px;">${escapeHtml(data.name || SESSION_ID)}</strong> is connected
-</h4>
+                <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
+                WhatsApp Session <strong style="margin:0 4px;">${escapeHtml(data.name || SESSION_ID)}</strong> is connected
+              </h4>
 
               <div><strong>User:</strong> ${escapeHtml(username)}</div>
+              <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
             </div>
-
           </div>
         `;
       })

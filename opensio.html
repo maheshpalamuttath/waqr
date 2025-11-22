@@ -288,7 +288,7 @@
       <p>Loading profile…</p>
     `;
 
-    fetch(`${API_BASE}/default/profile`, {
+    fetch(`${API_BASE}/${SESSION_ID}/profile`, {
       headers: { "X-Api-Key": API_KEY }
     })
       .then(res => res.json())

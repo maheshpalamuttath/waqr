@@ -50,7 +50,74 @@
 
     @media (max-width:768px) { .row { flex-direction:column; } .card { padding:14px; border-radius:10px; } .qr-area { min-height:260px; } }
 
-    .alert-success { background:#f0fdf4; border-radius:8px; padding:14px; color:#065f46; border:1px solid rgba(16,185,129,0.08); }
+    /* Session Details */
+    .qr-area {
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+    }
+
+    /* The session connected alert */
+    .alert-success {
+      background: #f0fdf4;
+      border-radius: 8px;
+      padding: 14px;
+      color: #065f46;
+      border: 1px solid rgba(16, 185, 129, 0.08);
+      max-width: 400px; /* Limit max width for better display on smaller screens */
+      margin: 0 auto; /* Centering the content */
+      text-align: center;
+    }
+
+    .alert-success img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+      margin-bottom: 12px;
+    }
+
+    .alert-success h4 {
+      font-size: 16px;
+      display: inline; /* Ensure the text is on a single line */
+      white-space: nowrap; /* Prevent text wrapping */
+      margin-bottom: 6px;
+    }
+
+    .alert-success div {
+      font-size: 14px;
+    }
+
+    /* Responsive layout for smaller screens */
+    @media (max-width: 768px) {
+      .qr-area {
+        min-height: 260px;
+        padding: 12px;
+      }
+
+      .alert-success {
+        max-width: 90%; /* Allow for more width on small screens */
+        padding: 12px;
+      }
+
+      .alert-success h4 {
+        font-size: 14px; /* Smaller text for mobile */
+      }
+
+      .alert-success div {
+        font-size: 12px; /* Smaller font for mobile */
+      }
+
+      .alert-success img {
+        width: 60px;
+        height: 60px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -179,16 +246,19 @@
         const phoneNumber = rawId.includes("@") ? rawId.split("@")[0] : "Unknown";
 
         qrArea.innerHTML = `
-          <div class="alert-success" style="width:100%; display:flex; align-items:center; gap:18px;">
-            <img src="${picture}" alt="Profile Picture" style="width:72px; height:72px; border-radius:50%; object-fit:cover; box-shadow:0 6px 16px rgba(0,0,0,0.18);" />
-            <div style="line-height:1.4;">
-              <h4 style="margin:0 0 6px 0; display:flex; align-items:center;">
-                <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
-                WhatsApp Session <strong style="margin:0 4px;">${escapeHtml(data.name||SESSION_ID)}</strong> is connected
-              </h4>
-              <div><strong>User:</strong> ${escapeHtml(username)}</div>
-              <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
-            </div>
+<div class="alert-success" style="width:100%; display:flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;">
+  <img src="${picture}" alt="Profile Picture" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 16px rgba(0,0,0,0.18); margin-bottom: 12px;" />
+  <div style="line-height:1.4; max-width: 200px;">
+    <h4 style="margin: 0 0 6px 0; display: inline; white-space: nowrap;">
+      <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
+      WhatsApp Connected
+    </h4>
+    <div><strong>Session ID:</strong> ${escapeHtml(SESSION_ID)}</div>
+    <div><strong>User:</strong> ${escapeHtml(username)}</div>
+    <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
+  </div>
+</div>
+
           </div>
         `;
 

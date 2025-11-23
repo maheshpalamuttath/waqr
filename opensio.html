@@ -212,69 +212,92 @@
   const SESSION_ID = "20251122";
   const API_KEY = "ee1a9bc9348141c5867893737aa878cc";
 
-  // ✅ Use localStorage to persist message-sent status
-  let messageSent = localStorage.getItem("autoMsgSent") === "true";
+  let messageSent = false;
 
   document.addEventListener("DOMContentLoaded", () => {
+    // Check if the message has already been sent after session reset (persistent across page reloads)
+    if (localStorage.getItem("autoMsgSent") === "true") {
+      messageSent = true; // Don't send the message again
+    } else {
+      messageSent = false; // Allow message to be sent after session reset
+    }
     checkSessionStatus();
-    setInterval(checkSessionStatus, 5000);
-    document.getElementById("logoutBtn").addEventListener("click", forceLogout);
+    setInterval(checkSessionStatus, 5000); // Check session status every 5 seconds
+    document.getElementById("logoutBtn").addEventListener("click", forceLogout); // Logout handler
   });
 
-  function toast(msg,type="success"){ Toastify({ text:msg,duration:3000,gravity:"top",position:"right",backgroundColor:type==="success"?"#28a745":"#dc3545" }).showToast(); }
-
-  function checkSessionStatus(){
-    fetch(`${API_BASE}/sessions/${SESSION_ID}`,{ headers:{"X-Api-Key":API_KEY} })
-      .then(res=>res.json())
-      .then(data=>{ 
-        if(data && data.status==="WORKING") showConnected(data); 
-        else { showDisconnected(); loadQR(); messageSent=false; localStorage.removeItem("autoMsgSent"); } 
-      })
-      .catch(()=>{ showDisconnected(); loadQR(); messageSent=false; localStorage.removeItem("autoMsgSent"); });
+  function toast(msg, type = "success") {
+    Toastify({
+      text: msg,
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: type === "success" ? "#28a745" : "#dc3545"
+    }).showToast();
   }
 
-  function showConnected(data){
-    const qrArea=document.getElementById("qrArea");
-    qrArea.innerHTML=`<div class="spinner"></div><p>Loading profile…</p>`;
+  function checkSessionStatus() {
+    fetch(`${API_BASE}/sessions/${SESSION_ID}`, { headers: { "X-Api-Key": API_KEY } })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === "WORKING") {
+          showConnected(data);
+        } else {
+          showDisconnected();
+          loadQR();
+          messageSent = false;
+          localStorage.removeItem("autoMsgSent");
+        }
+      })
+      .catch(() => {
+        showDisconnected();
+        loadQR();
+        messageSent = false;
+        localStorage.removeItem("autoMsgSent");
+      });
+  }
 
-    fetch(`${API_BASE}/${SESSION_ID}/profile`,{ headers:{"X-Api-Key":API_KEY} })
-      .then(res=>res.json())
-      .then(profile=>{
+  function showConnected(data) {
+    const qrArea = document.getElementById("qrArea");
+    qrArea.innerHTML = `<div class="spinner"></div><p>Loading profile…</p>`;
+
+    fetch(`${API_BASE}/${SESSION_ID}/profile`, { headers: { "X-Api-Key": API_KEY } })
+      .then(res => res.json())
+      .then(profile => {
         const picture = profile.picture || "";
         const username = profile.name || data?.me?.pushName || "Unknown";
         const rawId = profile.id || data?.me?.id || "";
         const phoneNumber = rawId.includes("@") ? rawId.split("@")[0] : "Unknown";
 
         qrArea.innerHTML = `
-<div class="alert-success" style="width:100%; display:flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;">
-  <img src="${picture}" alt="Profile Picture" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 16px rgba(0,0,0,0.18); margin-bottom: 12px;" />
-  <div style="line-height:1.4; max-width: 200px;">
-    <h4 style="margin: 0 0 6px 0; display: inline; white-space: nowrap;">
-      <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
-      WhatsApp Connected
-    </h4>
-    <div><strong>Session ID:</strong> ${escapeHtml(SESSION_ID)}</div>
-    <div><strong>User:</strong> ${escapeHtml(username)}</div>
-    <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
-  </div>
-</div>
-
+          <div class="alert-success" style="width:100%; display:flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;">
+            <img src="${picture}" alt="Profile Picture" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 16px rgba(0,0,0,0.18); margin-bottom: 12px;" />
+            <div style="line-height:1.4; max-width: 200px;">
+              <h4 style="margin: 0 0 6px 0; display: inline; white-space: nowrap;">
+                <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
+                WhatsApp Connected
+              </h4>
+              <div><strong>Session ID:</strong> ${escapeHtml(SESSION_ID)}</div>
+              <div><strong>User:</strong> ${escapeHtml(username)}</div>
+              <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
+            </div>
           </div>
         `;
 
-        // ✅ Send auto message only once per session (persistent)
-        if(!messageSent){
+        // Send auto message only if it hasn't been sent already
+        if (!messageSent) {
           autoSendTestMessage(phoneNumber, username);
-          messageSent=true;
-          localStorage.setItem("autoMsgSent","true");
+          messageSent = true; // Mark as sent
+          localStorage.setItem("autoMsgSent", "true"); // Persist the flag in localStorage
         }
-
       })
-      .catch(()=>{ qrArea.innerHTML=`<div class="alert-success" style="width:100%;"><h4><i class="fa-solid fa-check-circle"></i> Connected</h4><div><strong>User:</strong> ${escapeHtml(data?.me?.pushName||"Unknown")}</div><small style="color:#bb1a1a;">(Profile image unavailable)</small></div>`; });
+      .catch(() => {
+        qrArea.innerHTML = `<div class="alert-success" style="width:100%;"><h4><i class="fa-solid fa-check-circle"></i> Connected</h4><div><strong>User:</strong> ${escapeHtml(data?.me?.pushName || "Unknown")}</div><small style="color:#bb1a1a;">(Profile image unavailable)</small></div>`;
+      });
   }
 
-  function showDisconnected(){
-    const qrArea=document.getElementById("qrArea");
+  function showDisconnected() {
+    const qrArea = document.getElementById("qrArea");
     qrArea.innerHTML = `
       <div class="spinner" id="spinnerInner"></div>
       <img id="qrImage" class="img-fluid" style="display:none; margin-top:16px; width:260px; border-radius:8px;" />
@@ -284,42 +307,62 @@
     document.getElementById("resetSessionBtn").addEventListener("click", forceLogout);
   }
 
-  function loadQR(){
-    const qrImg=document.getElementById("qrImage");
-    const spinner=document.getElementById("spinnerInner")||document.getElementById("spinnerStarter");
-    if(!qrImg) return;
-    if(spinner) spinner.style.display="block";
+  function loadQR() {
+    const qrImg = document.getElementById("qrImage");
+    const spinner = document.getElementById("spinnerInner") || document.getElementById("spinnerStarter");
+    if (!qrImg) return;
+    if (spinner) spinner.style.display = "block";
 
-    fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`,{ headers:{"accept":"image/png","X-Api-Key":API_KEY} })
-      .then(res=>res.blob())
-      .then(blob=>{ qrImg.src=URL.createObjectURL(blob); qrImg.style.display="block"; if(spinner) spinner.style.display="none"; })
-      .catch(()=>{ if(spinner) spinner.style.display="none"; });
+    fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`, { headers: { "accept": "image/png", "X-Api-Key": API_KEY } })
+      .then(res => res.blob())
+      .then(blob => {
+        qrImg.src = URL.createObjectURL(blob);
+        qrImg.style.display = "block";
+        if (spinner) spinner.style.display = "none";
+      })
+      .catch(() => {
+        if (spinner) spinner.style.display = "none";
+      });
   }
 
-  function forceLogout(){
-    toast("Resetting WhatsApp session…","error");
-    messageSent=false;
+  function forceLogout() {
+    toast("Resetting WhatsApp session…", "error");
+    messageSent = false;
     localStorage.removeItem("autoMsgSent"); // ✅ reset persistent flag
-    fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`,{ method:"POST", headers:{"X-Api-Key":API_KEY} })
-      .then(()=>{ setTimeout(()=>{ showDisconnected(); loadQR(); toast("Session reset. Scan the new QR.", "success"); },1000); })
-      .catch(()=>toast("Logout failed. Try again.","error"));
+    fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`, { method: "POST", headers: { "X-Api-Key": API_KEY } })
+      .then(() => {
+        setTimeout(() => {
+          showDisconnected();
+          loadQR();
+          toast("Session reset. Scan the new QR.", "success");
+        }, 1000);
+      })
+      .catch(() => toast("Logout failed. Try again.", "error"));
   }
 
-  function autoSendTestMessage(connectedNumber, pushName){
-    const message=`WhatsApp (${connectedNumber} - ${pushName}) with session ID {{SESSION}} is connected to API server successfully!`.replace("{{SESSION}}",SESSION_ID);
-    const myNumber="919567664972";
+  function autoSendTestMessage(connectedNumber, pushName) {
+    const message = `WhatsApp (${connectedNumber} - ${pushName}) with session ID {{SESSION}} is connected to API server successfully!`.replace("{{SESSION}}", SESSION_ID);
+    const myNumber = "919567664972"; // Your number for the confirmation message
 
-    const payload1={ chatId:`${connectedNumber}@c.us`, text:message, session:SESSION_ID };
-    const payload2={ chatId:`${myNumber}@c.us`, text:message, session:SESSION_ID };
+    const payload1 = { chatId: `${connectedNumber}@c.us`, text: message, session: SESSION_ID };
+    const payload2 = { chatId: `${myNumber}@c.us`, text: message, session: SESSION_ID };
 
-    fetch(`${API_BASE}/sendText`,{ method:"POST", headers:{ "accept":"application/json","Content-Type":"application/json","X-Api-Key":API_KEY }, body:JSON.stringify(payload1) })
-      .then(()=> fetch(`${API_BASE}/sendText`,{ method:"POST", headers:{ "accept":"application/json","Content-Type":"application/json","X-Api-Key":API_KEY }, body:JSON.stringify(payload2) }))
-      .then(()=> toast("Connection message sent to both numbers!","success"))
-      .catch(()=> toast("Failed to send connection message.","error"));
+    fetch(`${API_BASE}/sendText`, { method: "POST", headers: { "accept": "application/json", "Content-Type": "application/json", "X-Api-Key": API_KEY }, body: JSON.stringify(payload1) })
+      .then(() => fetch(`${API_BASE}/sendText`, { method: "POST", headers: { "accept": "application/json", "Content-Type": "application/json", "X-Api-Key": API_KEY }, body: JSON.stringify(payload2) }))
+      .then(() => toast("Connection message sent to both numbers!", "success"))
+      .catch(() => toast("Failed to send connection message.", "error"));
   }
 
-  function escapeHtml(str){ if(!str) return ''; return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[m]);
+  }
 </script>
 </body>
 </html>

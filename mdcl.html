@@ -5,225 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WhatsApp API Server Connect</title>
 
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Argon / Original CSS -->
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/nucleo/css/nucleo.css">
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
-
-  <!-- FontAwesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <!-- Argon + custom -->
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/argon.css">
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/css/custom.css">
-  <link rel="stylesheet" href="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
   <style>
-    :root{ --brand:#5b73e8; --muted:#6b7280; }
-    body { font-family: 'Inter', sans-serif; background: #f5f7fb; margin: 0; padding: 0; }
+    :root { --brand:#5b73e8; --muted:#6b7280; --danger: #ef4444; }
+    body { font-family: 'Inter', sans-serif; background: #f5f7fb; color: #333; margin: 0; padding: 0; }
     .container-fluid { max-width: 1200px; margin: 36px auto; padding: 0 16px; }
-    .card { background: #fff; border-radius: 14px; box-shadow: 0 8px 25px rgba(16,24,40,0.06); padding: 18px; margin-bottom: 20px; border: 0; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid rgba(15,23,42,0.04); }
-    h3,h4 { margin:0; font-weight:600; color:#0f172a; }
-    .btn { padding:8px 14px; border-radius:10px; border:none; cursor:pointer; font-size:14px; transition:.2s ease-in-out; display:inline-flex; align-items:center; gap:8px; }
-    .btn-neutral { background:#eef2ff; color:#0f172a; }
-    .btn-neutral:hover { transform:translateY(-1px); }
-    .btn-warning { background:#ffdd57; color:#111; }
-    .btn-warning:hover { transform:translateY(-1px); }
-    .qr-area { min-height:320px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:18px; }
-    .spinner { border:4px solid rgba(0,0,0,0.08); border-left-color:var(--brand); width:56px; height:56px; border-radius:50%; animation:spin 1s linear infinite; margin:8px auto; }
+    
+    .card { background: #fff; border-radius: 14px; box-shadow: 0 8px 25px rgba(16,24,40,0.06); padding: 20px; margin-bottom: 20px; border: 0; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); background: transparent; }
+    
+    h3, h4 { margin: 0; font-weight: 700; color: #1e293b; }
+    
+    .btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: .2s ease-in-out; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-danger { background: #fee2e2; color: #b91c1c; }
+    .btn-danger:hover { background: #fecaca; }
+
+    .qr-area { min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 2px dashed #e2e8f0; border-radius: 12px; margin-top: 15px; background: #fafafa; position: relative; }
+    
+    #qrImage { max-width: 260px; border-radius: 10px; border: 1px solid #ddd; padding: 10px; background: white; display: none; }
+
+    .spinner { border: 4px solid rgba(0,0,0,0.05); border-left-color: var(--brand); width: 45px; height: 45px; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .steps .step { display:flex; align-items:center; gap:14px; margin:14px 0; }
-    .step-icon { background:linear-gradient(135deg, rgba(91,115,232,0.95), rgba(91,115,232,0.8)); width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; box-shadow:0 8px 20px rgba(91,115,232,0.18); flex-shrink:0; }
-    .guide-img { width:100%; border-radius:12px; margin-bottom:12px; }
+    .steps .step { display: flex; align-items: center; gap: 14px; margin: 16px 0; }
+    .step-icon { background: var(--brand); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+    
+    .guide-img { width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
 
-    footer { text-align:center; padding:18px; background:transparent; font-size:14px; color:var(--muted); margin-top:8px; }
-    footer a { color:var(--brand); font-weight:600; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
+    .profile-card { background: #f0fdf4; border: 1px solid #bcf0da; color: #166534; padding: 25px; border-radius: 12px; width: 100%; text-align: center; }
+    .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); object-fit: cover; margin-bottom: 15px; }
 
-    .row { display:flex; gap:20px; flex-wrap:wrap; }
-    .col-left { flex:1 1 65%; min-width:300px; }
-    .col-right { flex:1 1 32%; min-width:260px; }
-
-    @media (max-width:768px) { .row { flex-direction:column; } .card { padding:14px; border-radius:10px; } .qr-area { min-height:260px; } }
-
-    /* Session Details */
-    .qr-area {
-      min-height: 320px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 18px;
-    }
-
-    /* The session connected alert */
-    .alert-success {
-      background: #f0fdf4;
-      border-radius: 8px;
-      padding: 14px;
-      color: #065f46;
-      border: 1px solid rgba(16, 185, 129, 0.08);
-      max-width: 400px; /* Limit max width for better display on smaller screens */
-      margin: 0 auto; /* Centering the content */
-      text-align: center;
-    }
-
-    .alert-success img {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-      margin-bottom: 12px;
-    }
-
-    .alert-success h4 {
-      font-size: 16px;
-      display: inline; /* Ensure the text is on a single line */
-      white-space: nowrap; /* Prevent text wrapping */
-      margin-bottom: 6px;
-    }
-
-    .alert-success div {
-      font-size: 14px;
-    }
-
-    /* Responsive layout for smaller screens */
-    @media (max-width: 768px) {
-      .qr-area {
-        min-height: 260px;
-        padding: 12px;
-      }
-
-      .alert-success {
-        max-width: 90%; /* Allow for more width on small screens */
-        padding: 12px;
-      }
-
-      .alert-success h4 {
-        font-size: 14px; /* Smaller text for mobile */
-      }
-
-      .alert-success div {
-        font-size: 12px; /* Smaller font for mobile */
-      }
-
-      .alert-success img {
-        width: 60px;
-        height: 60px;
-      }
-    }
+    footer { text-align: center; padding: 30px; color: var(--muted); font-size: 14px; }
+    footer a { color: var(--brand); font-weight: 600; text-decoration: none; }
   </style>
 </head>
 <body>
 
 <div class="container-fluid">
   <div class="row">
-
-    <!-- LEFT -->
-    <div class="col-left">
-      <div class="card card-neutral">
+    <div class="col-md-8">
+      <div class="card">
         <div class="card-header">
-          <h3>WhatsApp API Server Connect (MD College Library - 20250818)</h3>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <button class="btn btn-neutral" id="logoutBtn" title="Logout / Reset">
-              <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
-          </div>
+          <h3><i class="fa-brands fa-whatsapp text-success"></i> WhatsApp API Server</h3>
+          <button class="btn btn-danger" id="logoutBtn">
+            <i class="fa-solid fa-power-off"></i> Logout & Restart
+          </button>
         </div>
-
-        <div class="card-body" style="padding:0; margin-top:12px;">
+        <div class="card-body p-0">
           <div id="qrArea" class="qr-area">
-            <div class="spinner" id="spinnerStarter"></div>
+            <div class="spinner" id="mainSpinner"></div>
+            <p class="mt-3 text-muted" id="statusText">Initializing session...</p>
           </div>
         </div>
       </div>
 
-      <!-- INFO CARD -->
       <div class="card">
         <div class="card-header">
           <h4>Auto Test Message</h4>
-          <i class="fa-solid fa-robot"></i>
+          <i class="fa-solid fa-robot text-primary"></i>
         </div>
-        <p style="margin-top:10px; color:#555;">
-          A confirmation message will be sent automatically to the linked WhatsApp number once the session connects.
-        </p>
+        <p class="mt-2 text-muted">A verification message is sent to your WhatsApp number automatically upon successful connection.</p>
       </div>
     </div>
 
-    <!-- RIGHT -->
-    <div class="col-right">
+    <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          <h4>How to Scan</h4>
-          <button class="btn btn-neutral" onclick="document.getElementById('guideImg').scrollIntoView({behavior:'smooth'})">
-            <i class="fa-solid fa-lightbulb"></i>&nbsp;Guide
-          </button>
-        </div>
-
-        <div style="padding-top:12px;">
-          <img id="guideImg" src="https://i.ytimg.com/vi/abf4bbMlYGA/maxresdefault.jpg" class="guide-img" />
-
+        <div class="card-header"><h4>How to Scan</h4></div>
+        <div class="mt-3">
+          <img src="https://i.ytimg.com/vi/abf4bbMlYGA/maxresdefault.jpg" class="guide-img" />
           <div class="steps">
-            <div class="step">
-              <div class="step-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-              <div><strong>Step 1:</strong> Open WhatsApp on your phone</div>
-            </div>
-            <div class="step">
-              <div class="step-icon"><i class="fa-solid fa-gear"></i></div>
-              <div><strong>Step 2:</strong> Tap <em>Settings</em> → <em>Linked Devices</em></div>
-            </div>
-            <div class="step">
-              <div class="step-icon"><i class="fa-solid fa-link"></i></div>
-              <div><strong>Step 3:</strong> Tap <em>Link a device</em></div>
-            </div>
-            <div class="step">
-              <div class="step-icon"><i class="fa-solid fa-qrcode"></i></div>
-              <div><strong>Step 4:</strong> Scan the QR</div>
-            </div>
+            <div class="step"><div class="step-icon"><i class="fa-solid fa-mobile-screen"></i></div><div>Step 1: Open WhatsApp</div></div>
+            <div class="step"><div class="step-icon"><i class="fa-solid fa-gear"></i></div><div>Step 2: Settings → Linked Devices</div></div>
+            <div class="step"><div class="step-icon"><i class="fa-solid fa-qrcode"></i></div><div>Step 3: Scan the QR code</div></div>
           </div>
         </div>
-
-        <div style="padding-top:8px; border-top:1px solid rgba(15,23,42,0.04); margin-top:12px;">
-          <small style="color:var(--muted);">If session not connected, click Reset to load a new QR code.</small>
-        </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <footer>
-  &copy; <script>document.write(new Date().getFullYear())</script>
-  <a href="#" target="_blank">WhatsApp API Server Connect</a> — All Rights Reserved.<br>
-  Crafted by <a href="https://maheshpalamuttath.info" target="_blank">Mahesh Palamuttath</a>
+  &copy; <script>document.write(new Date().getFullYear())</script> WhatsApp API Server • Crafted by <a href="#">Mahesh Palamuttath</a>
 </footer>
 
-<!-- Toastify -->
-<script src="https://tinyurl.com/2rwemhe6/assets/plugins/toastify-js/src/toastify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <script>
   const API_BASE = "https://whats-api.opensio.co.in/api";
   const SESSION_ID = "20250818";
   const API_KEY = "ee1a9bc9348141c5867893737aa878cc";
 
-  let messageSent = false;
+  let messageSent = localStorage.getItem("autoMsgSent") === "true";
+  let isRestarting = false;
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Check if the message has already been sent after session reset (persistent across page reloads)
-    if (localStorage.getItem("autoMsgSent") === "true") {
-      messageSent = true; // Don't send the message again
-    } else {
-      messageSent = false; // Allow message to be sent after session reset
-    }
     checkSessionStatus();
-    setInterval(checkSessionStatus, 5000); // Check session status every 5 seconds
-    document.getElementById("logoutBtn").addEventListener("click", forceLogout); // Logout handler
+    setInterval(() => { if(!isRestarting) checkSessionStatus(); }, 5000);
+    document.getElementById("logoutBtn").addEventListener("click", forceLogout);
   });
 
   function toast(msg, type = "success") {
@@ -231,8 +113,8 @@
       text: msg,
       duration: 3000,
       gravity: "top",
-      position: "right",
-      backgroundColor: type === "success" ? "#28a745" : "#dc3545"
+      position: "center",
+      style: { background: type === "success" ? "#10b981" : "#ef4444", borderRadius: "10px" }
     }).showToast();
   }
 
@@ -242,126 +124,163 @@
       .then(data => {
         if (data && data.status === "WORKING") {
           showConnected(data);
+        } else if (data && data.status === "FAILED") {
+          showFailedState();
         } else {
           showDisconnected();
           loadQR();
-          messageSent = false;
-          localStorage.removeItem("autoMsgSent");
         }
       })
-      .catch(() => {
-        showDisconnected();
-        loadQR();
-        messageSent = false;
-        localStorage.removeItem("autoMsgSent");
-      });
+      .catch(() => showDisconnected());
+  }
+
+  function showFailedState() {
+    const qrArea = document.getElementById("qrArea");
+    if (qrArea.dataset.state === "failed") return;
+    qrArea.dataset.state = "failed";
+
+    qrArea.innerHTML = `
+      <div style="padding: 40px; text-align: center;">
+        <i class="fa-solid fa-circle-xmark fa-4xl text-danger mb-3" style="font-size: 50px;"></i>
+        <h4 class="text-danger">Session Failed</h4>
+        <p class="text-muted mt-2">The session engine encountered an error.</p>
+        <div class="mt-4 p-3" style="background: #fff5f5; border: 1px solid #feb2b2; border-radius: 12px;">
+            <p class="mb-2"><strong>Please click the "Logout & Restart" button</strong></p>
+            <p class="small text-muted mb-0">This will reset the engine and generate a new QR code for you.</p>
+        </div>
+      </div>
+    `;
   }
 
   function showConnected(data) {
     const qrArea = document.getElementById("qrArea");
-    qrArea.innerHTML = `<div class="spinner"></div><p>Loading profile…</p>`;
+    if (qrArea.dataset.state === "connected") return;
 
     fetch(`${API_BASE}/${SESSION_ID}/profile`, { headers: { "X-Api-Key": API_KEY } })
       .then(res => res.json())
       .then(profile => {
-        const picture = profile.picture || "";
-        const username = profile.name || data?.me?.pushName || "Unknown";
-        const rawId = profile.id || data?.me?.id || "";
-        const phoneNumber = rawId.includes("@") ? rawId.split("@")[0] : "Unknown";
-
+        qrArea.dataset.state = "connected";
+        const name = profile.name || data?.me?.pushName || "WhatsApp User";
+        const phone = (profile.id || data?.me?.id || "").split('@')[0];
+        
         qrArea.innerHTML = `
-          <div class="alert-success" style="width:100%; display:flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;">
-            <img src="${picture}" alt="Profile Picture" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 16px rgba(0,0,0,0.18); margin-bottom: 12px;" />
-            <div style="line-height:1.4; max-width: 200px;">
-              <h4 style="margin: 0 0 6px 0; display: inline; white-space: nowrap;">
-                <i class="fa-solid fa-check-circle" style="margin-right:8px;"></i>
-                WhatsApp Connected
-              </h4>
-              <div><strong>Session ID:</strong> ${escapeHtml(SESSION_ID)}</div>
-              <div><strong>User:</strong> ${escapeHtml(username)}</div>
-              <div><strong>Phone:</strong> ${escapeHtml(phoneNumber)}</div>
-            </div>
+          <div class="profile-card">
+            <img src="${profile.picture || 'https://ui-avatars.com/api/?name='+name}" class="profile-img" />
+            <h4>Account Connected</h4>
+            <div class="mt-2"><strong>Name:</strong> ${name}</div>
+            <div><strong>Phone:</strong> ${phone}</div>
+            <div class="badge badge-success mt-3 p-2">Session: ${SESSION_ID}</div>
           </div>
         `;
 
-        // Send auto message only if it hasn't been sent already
         if (!messageSent) {
-          autoSendTestMessage(phoneNumber, username);
-          messageSent = true; // Mark as sent
-          localStorage.setItem("autoMsgSent", "true"); // Persist the flag in localStorage
+          autoSendTestMessage(phone, name);
+          messageSent = true;
+          localStorage.setItem("autoMsgSent", "true");
         }
       })
       .catch(() => {
-        qrArea.innerHTML = `<div class="alert-success" style="width:100%;"><h4><i class="fa-solid fa-check-circle"></i> Connected</h4><div><strong>User:</strong> ${escapeHtml(data?.me?.pushName || "Unknown")}</div><small style="color:#bb1a1a;">(Profile image unavailable)</small></div>`;
+        qrArea.innerHTML = `<div class="profile-card"><h4>Connected</h4><p>API is active.</p></div>`;
       });
   }
 
   function showDisconnected() {
     const qrArea = document.getElementById("qrArea");
+    if (qrArea.dataset.state === "disconnected") return;
+    qrArea.dataset.state = "disconnected";
+    
     qrArea.innerHTML = `
       <div class="spinner" id="spinnerInner"></div>
-      <img id="qrImage" class="img-fluid" style="display:none; margin-top:16px; width:260px; border-radius:8px;" />
-      <p style="margin-top:14px; color:#bb1a1a;">Session not connected.<br>Click Reset to load a new QR code.</p>
-      <button class="btn btn-warning" id="resetSessionBtn"><i class="fa-solid fa-rotate-right"></i> Reset Session</button>
+      <img id="qrImage" alt="QR Code" />
+      <p class="mt-3 text-muted" id="qrText">Generating QR Code...</p>
     `;
-    document.getElementById("resetSessionBtn").addEventListener("click", forceLogout);
   }
 
-  function loadQR() {
+  async function loadQR(retries = 5) {
     const qrImg = document.getElementById("qrImage");
-    const spinner = document.getElementById("spinnerInner") || document.getElementById("spinnerStarter");
-    if (!qrImg) return;
-    if (spinner) spinner.style.display = "block";
+    if (!qrImg || qrImg.style.display === "block") return;
 
-    fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`, { headers: { "accept": "image/png", "X-Api-Key": API_KEY } })
-      .then(res => res.blob())
-      .then(blob => {
-        qrImg.src = URL.createObjectURL(blob);
-        qrImg.style.display = "block";
-        if (spinner) spinner.style.display = "none";
-      })
-      .catch(() => {
-        if (spinner) spinner.style.display = "none";
+    try {
+      const res = await fetch(`${API_BASE}/${SESSION_ID}/auth/qr?format=image`, { 
+        headers: { "X-Api-Key": API_KEY } 
       });
+
+      if (res.status === 404 && retries > 0) {
+        setTimeout(() => loadQR(retries - 1), 2000);
+        return;
+      }
+
+      const blob = await res.blob();
+      const newUrl = URL.createObjectURL(blob);
+      if (qrImg.src.startsWith('blob:')) URL.revokeObjectURL(qrImg.src);
+
+      const spinner = document.getElementById("spinnerInner");
+      const qrText = document.getElementById("qrText");
+      
+      if(spinner) spinner.style.display = "none";
+      if(qrText) qrText.innerText = "Scan this code with WhatsApp";
+      
+      qrImg.src = newUrl;
+      qrImg.style.display = "block";
+    } catch (err) {
+      console.error("QR Load Failed");
+    }
   }
 
-  function forceLogout() {
-    toast("Resetting WhatsApp session…", "error");
-    messageSent = false;
-    localStorage.removeItem("autoMsgSent"); // ✅ reset persistent flag
-    fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`, { method: "POST", headers: { "X-Api-Key": API_KEY } })
-      .then(() => {
-        setTimeout(() => {
-          showDisconnected();
-          loadQR();
-          toast("Session reset. Scan the new QR.", "success");
-        }, 1000);
-      })
-      .catch(() => toast("Logout failed. Try again.", "error"));
+  async function forceLogout() {
+    isRestarting = true;
+    const qrArea = document.getElementById("qrArea");
+    qrArea.dataset.state = "restarting";
+    
+    toast("Cleaning session...", "error");
+    qrArea.innerHTML = `<div class="spinner"></div><p class="mt-3">Restarting background session...</p>`;
+
+    try {
+      await fetch(`${API_BASE}/sessions/${SESSION_ID}/logout`, { 
+        method: "POST", 
+        headers: { "X-Api-Key": API_KEY } 
+      });
+
+      await fetch(`${API_BASE}/sessions/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Api-Key": API_KEY },
+        body: JSON.stringify({ name: SESSION_ID })
+      });
+
+      localStorage.removeItem("autoMsgSent");
+      messageSent = false;
+      
+      toast("Success! Waiting for QR code.", "success");
+
+      setTimeout(() => {
+        isRestarting = false;
+        showDisconnected();
+        loadQR();
+      }, 5000);
+
+    } catch (e) {
+      isRestarting = false;
+      toast("Error restarting session", "error");
+      checkSessionStatus();
+    }
   }
 
-  function autoSendTestMessage(connectedNumber, pushName) {
-    const message = `WhatsApp (${connectedNumber} - ${pushName}) with session ID {{SESSION}} is connected to API server successfully!`.replace("{{SESSION}}", SESSION_ID);
-    const myNumber = "919567664972"; // Your number for the confirmation message
+  function autoSendTestMessage(num, name) {
+    const msg = `WhatsApp (${num} - ${name}) with session ID ${SESSION_ID} is connected to API server successfully!`;
+    const target = "919567664972"; 
 
-    const payload1 = { chatId: `${connectedNumber}@c.us`, text: message, session: SESSION_ID };
-    const payload2 = { chatId: `${myNumber}@c.us`, text: message, session: SESSION_ID };
+    const payloads = [
+        { chatId: `${num}@c.us`, text: msg, session: SESSION_ID },
+        { chatId: `${target}@c.us`, text: msg, session: SESSION_ID }
+    ];
 
-    fetch(`${API_BASE}/sendText`, { method: "POST", headers: { "accept": "application/json", "Content-Type": "application/json", "X-Api-Key": API_KEY }, body: JSON.stringify(payload1) })
-      .then(() => fetch(`${API_BASE}/sendText`, { method: "POST", headers: { "accept": "application/json", "Content-Type": "application/json", "X-Api-Key": API_KEY }, body: JSON.stringify(payload2) }))
-      .then(() => toast("Connection message sent to both numbers!", "success"))
-      .catch(() => toast("Failed to send connection message.", "error"));
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"']/g, m => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    })[m]);
+    payloads.forEach(p => {
+        fetch(`${API_BASE}/sendText`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Api-Key": API_KEY },
+            body: JSON.stringify(p)
+        });
+    });
   }
 </script>
 </body>
